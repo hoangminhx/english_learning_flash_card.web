@@ -19,6 +19,7 @@ const CardManagementPage = () => {
 
   const [totalCards, setTotalCards] = useState(0)
   const [cards, setCards] = useState([])
+  const [requestingData, setRequestingData] = useState(false)
 
   const handleStudyModeClick = () => {
     navigate('/study')
@@ -26,7 +27,7 @@ const CardManagementPage = () => {
 
   const handleCardSubmit = async (values) => {
     //request insert
-    //if success, refresh the list
+    //if success, put it in front of the list
     try {
       const { signal } = abortController.current
       const res = await fetch('https://localhost:5001/api/card', {
@@ -40,7 +41,9 @@ const CardManagementPage = () => {
       })
 
       if (res.ok) {
-        fetchAllCardsAsync()
+        const { id } = await res.json()
+        addLocalCard({ id, ...values })
+        setTotalCards(prevTotal => prevTotal + 1)
       }
     } catch (error) {
       console.error(error)
@@ -49,7 +52,7 @@ const CardManagementPage = () => {
 
   const handleRemoveCard = async ({ id }) => {
     //request delete
-    //if success, refresh the list
+    //if success, delete it locally
     try {
       const { signal } = abortController.current
       const res = await fetch(`https://localhost:5001/api/card/${id}`, {
@@ -58,17 +61,40 @@ const CardManagementPage = () => {
       })
 
       if (res.ok) {
-        fetchAllCardsAsync()
+        removeLocalCard({ id })
+        setTotalCards(prevTotal => prevTotal - 1)
       }
     } catch (error) {
       console.error(error)
     }
   }
 
-  const fetchAllCardsAsync = async () => {
+  const handleRequestData = () => {
+    if (requestingData || totalCards === cards.length) return
+
+    fetchCardsAsync()
+  }
+
+  const removeLocalCard = ({ id }) => {
+    setCards(prevCard => {
+      const cardIndex = prevCard.findIndex(c => c.id === id)
+      prevCard.splice(cardIndex, 1)
+      return prevCard
+    })
+  }
+
+  const addLocalCard = newCard => {
+    if (newCard.id) {
+      setCards(prevCards => [newCard].concat(prevCards))
+    }
+  }
+
+  const fetchCardsAsync = async () => {
+    setRequestingData(true)
+    const pageSize = 10
     try {
       const { signal } = abortController.current
-      const res = await fetch('https://localhost:5001/api/card', {
+      const res = await fetch(`https://localhost:5001/api/card?offset=${cards.length}&pageSize${pageSize}`, {
         method: 'GET',
         headers:
         {
@@ -77,23 +103,22 @@ const CardManagementPage = () => {
         signal
       })
       const data = await res.json()
-      setCards(ensureArray(data))
+      setCards(prevCards => prevCards.concat(ensureArray(data.items)))
+      setTotalCards(data.total)
     } catch (error) {
       console.error(error)
     }
+
+    setRequestingData(false)
   }
 
   useEffect(() => {
-    fetchAllCardsAsync()
+    fetchCardsAsync()
 
     return () => {
       abortController.current.abort()
     }
   }, [])
-
-  useEffect(() => {
-    setTotalCards(cards.length)
-  }, [cards])
 
   return (
     <CustomContainer>
@@ -107,7 +132,7 @@ const CardManagementPage = () => {
         </Col>
       </Row>
       <Row>
-        <CardList cards={cards} onRemoveCard={handleRemoveCard} />
+        <CardList cards={cards} onRemoveCard={handleRemoveCard} onRequestData={handleRequestData} />
       </Row>
     </CustomContainer>
   )

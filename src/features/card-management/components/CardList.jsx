@@ -1,61 +1,38 @@
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { useEffect, useRef, useState } from 'react'
-import { Button } from 'reactstrap'
+import { List } from 'react-virtualized'
+import { Button, Col, Row } from 'reactstrap'
 
-import RTCustomCardCell from '../../extensions/react-table/cell/RTCustomCardCell'
+const CardList = ({ cards = [], onRemoveCard, onRequestData }) => {
 
-const CardList = ({ cards, onRemoveCard }) => {
+  const rowRenderer = ({ index, key, style }) => {
+    const { id, word, meaning } = cards[index] || {}
+    return (
+      <Row key={key} style={style}>
+        <Col xs={10}>
+          <div>{word}</div>
+          <div>{meaning}</div>
+        </Col>
+        <Col xs={2}>
+          <div><Button onClick={() => onRemoveCard && onRemoveCard({ id })}>{'del'}</Button></div>
+        </Col>
+      </Row>
+    )
+  }
 
-  const columnsRef = useRef([
-    {
-      header: 'word',
-      accessorKey: 'word',
-      cell: ({ row }) => <RTCustomCardCell row={row} />,
-    },
-    {
-      header: 'del',
-      cell: ({ row }) => <Button onClick={() => onRemoveCard({ id: row.original.id })}>del</Button>,
-      size: 70
-    },
-  ])
-
-  const [data, setData] = useState([])
-
-  const table = useReactTable({
-    data,
-    columns: columnsRef.current,
-    getCoreRowModel: getCoreRowModel(),
-  })
-
-  useEffect(() => {
-    setData(cards)
-  }, [cards])
+  const handleScroll = ({ clientHeight, scrollHeight, scrollTop }) => {
+    if (scrollHeight - scrollTop <= clientHeight * 1.5) {
+      onRequestData && onRequestData()
+    }
+  }
 
   return (
-    <div>
-      <table style={{width: '100%'}}>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id} style={{ width: header.getSize() }}></th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <List
+      width={500}
+      height={300}
+      rowCount={cards.length}
+      rowHeight={50}
+      rowRenderer={rowRenderer}
+      onScroll={handleScroll}
+    />
   )
 }
 

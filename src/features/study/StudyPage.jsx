@@ -48,11 +48,11 @@ const StudyPage = () => {
       const data = await res.json()
 
       if (data) {
-        setCards(ensureArray(data.cards))
+        setCards(ensureArray(data.items))
         setTotal(data.total)
 
         let indexInCurrentPage = index - page * pageSize
-        setCurrentCard(data.cards[indexInCurrentPage])
+        setCurrentCard(data.items[indexInCurrentPage])
       }
 
     } catch (error) {

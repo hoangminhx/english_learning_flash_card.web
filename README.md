@@ -7,3 +7,4 @@
 - Improve UI - auto focus
 - Add search/filter/order
 - Infinity scroll
+- Undo delete
