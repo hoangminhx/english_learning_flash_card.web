@@ -5,6 +5,7 @@ import { Button, Col, Row } from 'reactstrap'
 import Card from './components/Card'
 import { ensureArray } from '../../helpers/array.helper'
 import { CustomContainer, CustomRow } from '../common/styled/bootstraps.styled'
+import { environment } from '../../helpers/environment'
 
 const StudyPage = () => {
 
@@ -38,7 +39,7 @@ const StudyPage = () => {
   const fetchCardsAsync = async () => {
     try {
       const { signal } = abortController.current
-      const res = await fetch(`https://localhost:5001/api/study/cards?page=${page}&pageSize=${pageSize}`, {
+      const res = await fetch(`${environment.apiUrl}/api/study/cards?page=${page}&pageSize=${pageSize}`, {
         method: 'GET',
         headers:
         {

@@ -6,6 +6,7 @@ import CardList from './components/CardList'
 import CardForm from './components/CardForm'
 import { ensureArray } from '../../helpers/array.helper'
 import { CustomContainer, CustomRow } from '../common/styled/bootstraps.styled'
+import { environment } from '../../helpers/environment'
 
 
 const CardManagementPage = () => {
@@ -26,7 +27,7 @@ const CardManagementPage = () => {
     //if success, put it in front of the list
     try {
       const { signal } = abortController.current
-      const res = await fetch('https://localhost:5001/api/card', {
+      const res = await fetch(`${environment.apiUrl}/api/card`, {
         method: 'POST',
         headers:
         {
@@ -52,7 +53,7 @@ const CardManagementPage = () => {
     //if success, delete it locally
     try {
       const { signal } = abortController.current
-      const res = await fetch(`https://localhost:5001/api/card/${id}`, {
+      const res = await fetch(`${environment.apiUrl}/api/card/${id}`, {
         method: 'DELETE',
         signal
       })
@@ -89,9 +90,10 @@ const CardManagementPage = () => {
   const fetchCardsAsync = async () => {
     setRequestingData(true)
     const pageSize = 10
+
     try {
       const { signal } = abortController.current
-      const res = await fetch(`https://localhost:5001/api/card?offset=${cards.length}&pageSize${pageSize}`, {
+      const res = await fetch(`${environment.apiUrl}/api/card?offset=${cards.length}&pageSize${pageSize}`, {
         method: 'GET',
         headers:
         {
