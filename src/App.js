@@ -15,7 +15,7 @@ function App() {
   return (
     <MainLayout>
       <Routes>
-        <Route path='/' />
+        <Route path='/' Component={CardManagementPage} />
         <Route path='/card-management' Component={CardManagementPage} />
         <Route path='/study' Component={StudyPage} />
         <Route path='*' Component={ErrorPage} />

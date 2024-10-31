@@ -11,12 +11,11 @@ const CardList = ({ cards, onRemoveCard }) => {
       header: 'word',
       accessorKey: 'word',
       cell: ({ row }) => <RTCustomCardCell row={row} />,
-      size: 200
     },
     {
       header: 'del',
       cell: ({ row }) => <Button onClick={() => onRemoveCard({ id: row.original.id })}>del</Button>,
-      size: 10
+      size: 70
     },
   ])
 
@@ -33,28 +32,30 @@ const CardList = ({ cards, onRemoveCard }) => {
   }, [cards])
 
   return (
-    <table>
-      <thead>
-        {table.getHeaderGroups().map(headerGroup => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
-              <th key={header.id} style={{ width: header.getSize() }}></th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map(row => (
-          <tr key={row.id}>
-            {row.getVisibleCells().map(cell => (
-              <td key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div>
+      <table style={{width: '100%'}}>
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th key={header.id} style={{ width: header.getSize() }}></th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 
