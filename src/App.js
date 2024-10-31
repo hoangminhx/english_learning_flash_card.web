@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 import MainLayout from './features/layouts/MainLayout'
 import ErrorPage from './features/error-pages/ErrorPage'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 const CardManagementPage = lazy(() => import('./features/card-management/CardManagementPage'))
 const StudyPage = lazy(() => import('./features/study/StudyPage'))

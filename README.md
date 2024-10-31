@@ -1,10 +1,8 @@
 - SSO
 - Multiple languages
 - Add .env
-- Optimize create card to not reload the list
 - Not to send the id to the server
 - Improve error handling
-- Improve UI - auto focus
+- Improve UI
 - Add search/filter/order
-- Infinity scroll
 - Undo delete

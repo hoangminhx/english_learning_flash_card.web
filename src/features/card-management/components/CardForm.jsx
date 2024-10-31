@@ -32,7 +32,7 @@ const CardForm = ({ onCardSubmit }) => {
               <FFFormFeedback name='meaning' />
             </FormGroup>
             <Button color='primary' block type='submit' disabled={submitting}>
-              {'Add Flash Card'}
+              <i class='fa-solid fa-plus'></i>&nbsp;{'Add Flash Card'}
             </Button>
           </Form>
         )

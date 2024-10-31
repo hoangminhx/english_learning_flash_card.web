@@ -1,7 +1,7 @@
-import { CustomInput } from '../../common/styled/bootstraps.styled'
+import { Input } from 'reactstrap'
 
 const FFCustomInputAdapter = ({ input, meta, ...rest }) => {
-  return <CustomInput {...input} invalid={meta.error && meta.touched} {...rest} />
+  return <Input {...input} invalid={meta.error && meta.touched} {...rest} />
 }
 
 export default FFCustomInputAdapter

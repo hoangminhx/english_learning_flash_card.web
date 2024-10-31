@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { Button, Col, Container, Row } from 'reactstrap'
+import { Button, Col, Row } from 'reactstrap'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 
 import CardList from './components/CardList'
 import CardForm from './components/CardForm'
 import { ensureArray } from '../../helpers/array.helper'
+import { CustomContainer, CustomRow } from '../common/styled/bootstraps.styled'
 
-const CustomContainer = styled(Container)`
-  height: 80vh;
-  overflow: auto;
-`
 
 const CardManagementPage = () => {
 
@@ -25,7 +21,7 @@ const CardManagementPage = () => {
     navigate('/study')
   }
 
-  const handleCardSubmit = async (values) => {
+  const handleCardSubmit = async (values, form) => {
     //request insert
     //if success, put it in front of the list
     try {
@@ -44,6 +40,7 @@ const CardManagementPage = () => {
         const { id } = await res.json()
         addLocalCard({ id, ...values })
         setTotalCards(prevTotal => prevTotal + 1)
+        form.restart()
       }
     } catch (error) {
       console.error(error)
@@ -122,10 +119,14 @@ const CardManagementPage = () => {
 
   return (
     <CustomContainer>
-      <Row>
-        <Col xs={6}><Button color='primary' onClick={handleStudyModeClick}>Study Mode</Button></Col>
+      <CustomRow>
+        <Col xs={6}>
+          <Button color='primary' onClick={handleStudyModeClick}>
+            <i class='fa-solid fa-book'></i>&nbsp;Study Mode
+          </Button>
+        </Col>
         <Col xs={6} className='d-flex justify-content-end'>Total Cards: {totalCards}</Col>
-      </Row>
+      </CustomRow>
       <Row>
         <Col>
           <CardForm onCardSubmit={handleCardSubmit} />

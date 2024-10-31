@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Col, Container, Row } from 'reactstrap'
+import { Button, Col, Row } from 'reactstrap'
 
 import Card from './components/Card'
 import { ensureArray } from '../../helpers/array.helper'
+import { CustomContainer, CustomRow } from '../common/styled/bootstraps.styled'
 
 const StudyPage = () => {
 
@@ -84,35 +85,58 @@ const StudyPage = () => {
   }, [page])
 
   return (
-    <Container>
-      <Row>
-        <Col><Button color='primary' onClick={handleManageCardsClick}>Manage Cards</Button></Col>
-      </Row>
+    <CustomContainer>
+      <CustomRow>
+        <Col>
+          <Button color='primary' onClick={handleManageCardsClick}>
+            <i class='fa-solid fa-book'></i>&nbsp;Manage Cards
+          </Button>
+        </Col>
+      </CustomRow>
       <Row>
         <Col>
           <Card card={currentCard} meaningVisible={meaningVisible} />
         </Col>
       </Row>
       <Row>
-        <Col xs={4}>
-          <Button onClick={handlePrevious} disabled={!index}>{'<'}</Button>
+        <Col xs={4} className='text-end'>
+          <Button
+            onClick={handlePrevious}
+            disabled={!index}
+            outline
+            color='dark'
+          >
+            <i class='fa-solid fa-angle-left'></i>
+          </Button>
         </Col>
-        <Col xs={4}>
-          <Button onClick={handleShowMeaning} disabled={!currentCard}>
+        <Col xs={4} className='text-center'>
+          <Button
+            color='primary'
+            onClick={handleShowMeaning}
+            disabled={!currentCard}
+          >
+            <i class='fa-solid fa-arrows-rotate'></i>&nbsp;
             {meaningVisible ? 'Hide Meaning' : 'Show Meaning'}
           </Button>
         </Col>
         <Col xs={4}>
-          <Button onClick={handleNext} disabled={!total || (index === (total - 1))}>{'>'}</Button>
+          <Button
+            outline
+            color='dark'
+            onClick={handleNext}
+            disabled={!total || (index === (total - 1))}
+          >
+            <i class='fa-solid fa-angle-right'></i>
+          </Button>
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col className='text-center'>
           {`Card ${total ? index + 1 : 0} of ${total}`}
         </Col>
       </Row>
 
-    </Container>
+    </CustomContainer>
   )
 }
 
